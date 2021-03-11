@@ -1,0 +1,7 @@
+project(socket02)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED True)
+set(C_FLAGS -g -Wall)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+add_executable(01echosrv 01echosrv.c)
+add_executable(02echocli 02echocli.c)

@@ -1,0 +1,6 @@
+project(socket01)
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED True)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+add_executable(01byteOrderTest 01byteOrder.c)
+add_executable(02address 02address.c)
