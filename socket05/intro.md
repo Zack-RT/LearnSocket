@@ -36,6 +36,7 @@ ssize_t readline(int sockfd, void *buf, size_t maxline){
                 ret = readn(sockfd, bufp, i+1);
                 if(ret != i+1)
                     exit(EXIT_FAILURE);
+                return ret;
             }
         }
         // 没'\n'说明后面还有内容

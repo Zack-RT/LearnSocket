@@ -10,6 +10,7 @@
 #include <signal.h>
 #include <sys/wait.h>
 #include <errno.h>
+ #include <sys/select.h>
 
 #define ERR_EXIT(msg) \
     do{ \
