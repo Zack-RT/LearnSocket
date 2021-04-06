@@ -1,5 +1,10 @@
 # socket编程（八九）
 
+
+## 本节内容
+- 之前的服务器是每当一个客户端发起连接请求就创建一个子进程处理
+- 使用select来改进之前的服务器，一个进程就可以实现并发
+
 ## 五种IO模型
 ### 阻塞IO
 一旦套接口完成连接，我们可以向系统提交recv请求接收数据，这个请求是阻塞的，直到对等方数据发送到套接口接收的缓冲区中，recv再将接收到的数据由内核空间拷贝到用户空间，并返回。
@@ -20,11 +25,11 @@ fcntl(fd, F_SETFL, flag|O_NONBLOCK);
 ## select
 函数原型：
 ```
-@nfds：读写异常几何中的文件描述符的最大值+1
-@readfds：读集合
-@writefds：写集合
-@exceptfds：异常集合
-@timeout：超时结构体
+@nfds：读写异常几何中的文件描述符的最大值+1（左闭右开）
+@readfds：读集合，如果要关心某个IO的可读事件就将其对应的文件描述符放入该集合当中。
+@writefds：写集合，如果要关心某个IO的可写事件就将其对应的文件描述放入该集合当中。
+@exceptfds：异常集合，如果要关心某个IO的异常事件就将其对应的文件描述放入该集合当中。
+@timeout：超时结构体，可以指定一个超时时间，如果在这个时间内没有发生IO事件select也会返回，并且select返回值为0。
 int select(int nfds, fd_set *readfds, fd_set *writefds,
             fd_set *exceptfds, struct timeval *timeout);
 

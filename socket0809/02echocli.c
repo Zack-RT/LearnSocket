@@ -15,34 +15,7 @@
         exit(EXIT_FAILURE); \
     }while(0)
 
-// struct packet
-// {
-//     int len; // 包头，存放包体中实际的内容长度
-//     char buf[1024]; // 包体
-// };
-
 void echo_cli(int sock){
-/*    char sendbuf[1024] = {0};
-    char recvbuf[1024] = {0};
-    while(fgets(sendbuf, sizeof(sendbuf), stdin) != NULL){
-        // 发送消息
-        writen(sock, sendbuf, strlen(sendbuf)); 
-
-        int readSize = readline(sock, recvbuf, sizeof(sendbuf)); 
-        if(readSize == -1){
-            ERR_EXIT("readline");
-        }
-        else if(readSize == 0){
-            printf("server close\n");
-            break;
-        }
-        
-        fputs(recvbuf, stdout);
-        memset(sendbuf, 0, sizeof(sendbuf));
-        memset(recvbuf, 0, sizeof(recvbuf));
-    }
-    close(sock);
-*/
     fd_set rset;
     FD_ZERO(&rset);
     int nready;
