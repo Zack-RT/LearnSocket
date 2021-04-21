@@ -239,7 +239,7 @@ int connet_timeout(int fd, struct sockaddr_in *addr, unsigned int wait_seconds)
     if(wait_seconds > 0){
         activate_nonblock(fd);
     }
-    ret = connect(fd, (struct sock_addr*)addr, addrlen);
+    ret = connect(fd, (const struct sockaddr *)addr, addrlen);
     if(ret < 0 && errno == EINPROGRESS){
         fd_set connet_fdset;
         struct timeval timeout;
@@ -248,7 +248,7 @@ int connet_timeout(int fd, struct sockaddr_in *addr, unsigned int wait_seconds)
         timeout.tv_sec = wait_seconds;
         timeout.tv_usec = 0;
         do{
-            ret = select(fd+1, NULL, &connet_fdset, NULL, &connet_timeout) ; // 一但连接建立，套接字就处于可写状态，属于写事件
+            ret = select(fd+1, NULL, &connet_fdset, NULL, &timeout) ; // 一但连接建立，套接字就处于可写状态，属于写事件
         }while(ret < 0 && errno == EINTR);
         if(ret == 0){
             ret = -1;
