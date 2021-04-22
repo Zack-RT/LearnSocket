@@ -6,7 +6,7 @@
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <string.h>
-#include "./../socket11/socketutils.h"
+#include "socketutils.h"
 #include <signal.h>
 #include <sys/wait.h>
 #include <errno.h>

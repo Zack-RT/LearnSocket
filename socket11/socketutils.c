@@ -125,6 +125,7 @@ int read_timeout(int fd, unsigned int wait_seconds)
         }
         return ret;
     }
+    return -1;
 }
 
 // 与read_timeout大同小异
@@ -152,6 +153,7 @@ int write_timeout(int fd, unsigned int wait_seconds)
         }
         return ret;
     }
+    return -1;
 }
 
 // 带超时的accept
@@ -179,7 +181,7 @@ int accept_timeout(int fd, struct sockaddr_in *addr, unsigned int wait_seconds)
             return -1;
         }
         else if(ret == 0){
-            errno == ETIMEDOUT;
+            errno = ETIMEDOUT;
             return -1;
         }
     }
@@ -207,7 +209,7 @@ void activate_nonblock(int fd)
     }
     flag |= O_NONBLOCK;
     ret = fcntl(fd, F_SETFL, flag);
-    if(flag == -1){
+    if(ret == -1){
         exit(EXIT_FAILURE);
     }
 }
@@ -222,7 +224,7 @@ void deactivate_nonblock(int fd)
     }
     flag &= ~O_NONBLOCK;
     ret = fcntl(fd, F_SETFL, flag);
-    if(flag == -1){
+    if(ret == -1){
         exit(EXIT_FAILURE);
     }
 }
