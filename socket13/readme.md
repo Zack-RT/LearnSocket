@@ -28,3 +28,8 @@ int epoll_wait(int epfd, struct epoll_event *events,
 - epoll不仅会告诉进程有IO事件到来，还会告诉相关的信息，这些信息是由进程填充的，因此更具这些信息进程就能直接定位到事件，而不必遍历整个fd集合。
 
 ## epoll LT/ET模式
+- LT: Level Triger 水平触发
+	- 完全靠kernel epoll驱动，应用程序只需处理从epoll_wait返回的fds，这些fds我们认为它们处在就绪状态。
+- ET：Edge Triger 边缘触发
+	- 此模式下，系统仅仅通知应用程序哪些fds变成了就绪状态，一旦某个fd变成了就绪状态，epoll将不再关注这个fd的任何状态信息（从epoll队列移除）直到应用程序通过读写操作触发EAGAIN状态，epoll认为这个fd又变为了空闲状态，那么epoll又重新关注这个fd的状态变化（重新加入epoll队列）
+	- 随着epoll_wait的返回，队列中的fds是在减少的，所以在大并发的系统中，EPOLLET更有优势，但对代码的要求也更高。

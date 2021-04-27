@@ -19,7 +19,7 @@ $(BUILD_DIR):
 epollsrv:epollsrv.o socketutils.o
 	$(CXX) $(CXXFLAGS) -o $@ $?
 socketutils.o:./../socket11/socketutils.c
-	$(CXX) $(CXXFLAGS) -c -o $@ $?
+	$(CC) $(CFLAGS) -c -o $@ $?
 .PHONY:clean
 clean:
-	$(RM) ./build/* *.o
+	-$(RM) ./build/* *.o

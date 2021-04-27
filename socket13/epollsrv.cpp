@@ -16,24 +16,6 @@
 
 using EventList = std::vector<struct epoll_event>;
 
-void echo_srv(int fd){
-    char recvbuf[1024];
-    while(1){
-        memset(recvbuf, 0, sizeof(recvbuf));
-        int readSize = readline(fd, recvbuf, sizeof(recvbuf));
-        if(readSize == -1){
-            ERR_EXIT("readline");
-        }
-        else if(readSize == 0){
-            printf("client close\n");
-            break;
-        }
-
-        fputs(recvbuf, stdout);
-        writen(fd, recvbuf, strlen(recvbuf)); 
-    }
-}
-
 void handle_sigchld(int sig){
     //wait(NULL);
     while((waitpid(-1, NULL, WNOHANG)) > 0);
@@ -76,7 +58,7 @@ int main(){
     int epollfd = epoll_create1(EPOLL_CLOEXEC); // 创建一个epoll实例
     // 创建一个epoll事件结构体，关联接听套接口
     struct epoll_event event;
-    event.data.fd = listenfd; 
+    event.data.fd = listenfd; // epoll_event的data字段用于存储用户指定的信息
     event.events = EPOLLIN | EPOLLET; // 关注可写事件并以边缘的方式触发
     epoll_ctl(epollfd, EPOLL_CTL_ADD, listenfd, &event);
     
@@ -95,7 +77,7 @@ int main(){
         for(i = 0; i < nready; i++){ // 逐个处理
             if(events[i].data.fd == listenfd){ // 监听套接口产生事件
                 peerlen = sizeof(peeraddr);
-                conn = accept(listenfd, (struct sockaddr*)&peeraddr, &peerlen); // 此时调用accept不会阻塞
+                conn = accept(listenfd, (struct sockaddr*)&peeraddr, &peerlen);
                 if(conn < 0) ERR_EXIT("accept");
                 printf("ip=%s, port=%d\n", inet_ntoa(peeraddr.sin_addr), ntohs(peeraddr.sin_port));
                 printf("connection number: %d\n", ++count);
