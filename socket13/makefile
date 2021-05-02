@@ -1,7 +1,7 @@
 CC=gcc
 CXX=g++
-CFLAGS=-g -Wall -std=c11 
-CXXFLAGS=-g -Wall -std=c++11
+CFLAGS=-g -Wall -std=gnu11 
+CXXFLAGS=-g -Wall -std=gnu++11
 BIN=epollsrv
 OBJ=epollsrv.o socketutils.o
 INCL=./../socket11/
@@ -15,7 +15,7 @@ BUILD_DIR = ./build
 all:$(BUILD_DIR) $(BIN)
 	-mv ./*.o $(BIN) ./build/
 $(BUILD_DIR):
-	-mkdir $(BUILD_DIR)
+	[ -d $@ ] || mkdir $@
 epollsrv:epollsrv.o socketutils.o
 	$(CXX) $(CXXFLAGS) -o $@ $?
 socketutils.o:./../socket11/socketutils.c
