@@ -48,14 +48,35 @@ struct msqid_ds {
 #include <sys/ipc.h>
 #include <sys/msg.h>
 
-// 功能：用来创建和访问一个消息队列
-// @param key:某个消息队列的名字
-// @param msgflg:由九个权限标志构成，它们的用法和创建文件时使用的mode模式标志是一样的。
-// 返回值：成功返回一个非负整数，失败返回-1
 int msgget(key_t key, int msgflg);
 int msgctl(int msqid, int cmd, struct msqid_ds *buf);
 int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
+
 ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp,
                int msgflg);
 ```
+
+### msgget
+- 判断流程图
 ![msgget](mdimg/QQ截图20210505231838.png)
+- 功能：用来创建和访问一个消息队列
+- @param key:某个消息队列的名字
+- @param msgflg:由九个权限标志构成，它们的用法和创建文件时使用的mode模式标志是一样的。
+- 返回值：成功返回一个非负整数，失败返回-1
+
+### msgsnd
+- 功能：把一条消息添加到消息队列当中
+- @param msqid:由msgget返回的消息队列表示码
+- @param msgp:只想准备发送信息的指针
+- @param msgsz:msgp指向的消息的长度值，不包含保存信息类型的那个long int
+- @param msgflg:控制当前消息队列满或者达到系统值上限时的行为
+- 返回值：成功返回0，失败返回-1
+- msgflg=IPC_NOWAIT表示队列满不等待，返回EAGAIN错误。
+- 消息结构在两方面收到制约。首先，它必须小于系统规定的上限值MSGMAX；其次，它必须以一个long int长整数开始，接收者将利用这个长整数确定消息的类型
+- 消息结构参考形式如下：
+```
+struct msgbuf{
+    long mtype;
+    char mtext[1];
+}
+```

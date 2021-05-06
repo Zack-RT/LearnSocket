@@ -22,5 +22,8 @@ int main(void)
     struct msqid_ds buf;
     msgctl(msgid, IPC_STAT, &buf);
     printf("mod=%o\n",buf.msg_perm.mode);
+    printf("bytes=%ld\n", buf.__msg_cbytes);
+    printf("number=%ld\n", buf.msg_qnum);
+    printf("msgmax=%ld\n", buf.msg_qbytes);
     return 0;
 }
