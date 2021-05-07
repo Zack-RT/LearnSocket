@@ -31,6 +31,8 @@ int main(int argc, char *argv[])
     }
     struct msgbuf *ptr = (struct msgbuf*)malloc(sizeof(long)+len);
     ptr->mtype = type;
-    msgsnd(msgid, ptr, len, 0);
+    if(msgsnd(msgid, ptr, len, IPC_NOWAIT) < 0){
+        ERR_EXIT("msgsnd");
+    }
     return 0;
 }

@@ -1,5 +1,4 @@
-# System V消息队列（一）
-
+# System V消息队列
 ## 消息队列
 - 消息队列提供了一个从一个进程向另外一个进程发送一块数据的方法
 - 每个数据块都被认为是有一个类型，接收者进程接收的数据块可以有不同的类型值
@@ -51,7 +50,6 @@ struct msqid_ds {
 int msgget(key_t key, int msgflg);
 int msgctl(int msqid, int cmd, struct msqid_ds *buf);
 int msgsnd(int msqid, const void *msgp, size_t msgsz, int msgflg);
-
 ssize_t msgrcv(int msqid, void *msgp, size_t msgsz, long msgtyp,
                int msgflg);
 ```
@@ -80,3 +78,24 @@ struct msgbuf{
     char mtext[1];
 }
 ```
+
+### msgrcv
+- msgid：由msgget函数返回的消息队列标识码
+- msggp：是一个指针，指针指向准备接受的消息
+- msgsz：是msgp指向的消息长度，这个长度不包含保存消息类型的那个long int长整型
+- msgtype：可以实现接受优先级的简单形式
+- msgflg：控制着队列中没有相应类型的消息可供接受时函数的行为
+- 返回值：成功返回实际接受到缓冲区的字节数，失败返回-1
+- msgtype=0返回队列第一条信息
+- msgtype>0返回队列第一条类型等于msgtype的信息
+- msgtype<0返回队列第一条类型绝对值小于等于msgtype的信息
+- msgflg=IPC_NOWAIT，队列没有可读消息时不等待直接返回，errno=ENOMSG
+- msgflg=MSG_NOERROR，消息大小超过msgsz时会被截断
+- msgtype>0 && msgflg=MSC_EXCEPT，接受类型不等于msgtype的第一条消息
+
+## 用消息队列实现回射客户服务器程序
+![figure2](mdimg/QQ截图20210507142237.png)
+- 服用消息队列，通过指定type来区分消息的源与目的
+- 有可能产生死锁：如果有大量的客户端将消息队列填满，服务器将无法回射，也无法进一步读取。
+![figure3](mdimg/QQ截图20210507151945.png)
+- 通过多个队列实现可避免死锁
