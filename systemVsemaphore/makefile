@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-g -Wall -std=gnu11
 BUILD_DIR = ./build
-BIN=semtool
+BIN=semtool print dining
 OBJ=$(addsuffix .o, $(BIN))
 
 .SUFFIXES:.c
@@ -16,6 +16,8 @@ $(BUILD_DIR):
 
 $(BIN):$(OBJ)
 	$(CC) $(CFLAGS) -o semtool semtool.o
+	$(CC) $(CFLAGS) -o print print.o
+	$(CC) $(CFLAGS) -o dining dining.o
 
 .PHONY:clean
 clean:

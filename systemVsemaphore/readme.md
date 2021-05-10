@@ -72,3 +72,8 @@ int semop(int semid, struct sembuf *sops, size_t nsops);
   - sem_num：是信号量的编号
   - sem_op：是信号量的一次PV操作时加减的数值，一般只会用到两个值，一个是“-1”，也就是P操作，等待信号量变得可用；另一个是“+1”，也就是V操作，发出信号量已经变得可用。
   - sem_flg：两个取值IPC_NOWAIT或SEM_UNDO
+
+## 用信号量实现进程互斥实例
+![](mdimg/QQ截图20210510192528.png)
+
+## 用信号量解决哲学家就餐问题
