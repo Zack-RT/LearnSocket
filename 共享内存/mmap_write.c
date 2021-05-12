@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     lseek(fd, sizeof(STU)*5-1, SEEK_SET); // 指针定位到39个字节处
     write(fd, "", 1); // 增加一个，共40个字节
     STU *p = (STU *)mmap(NULL, sizeof(STU)*5-1, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
-    if(!p){
+    if(p == MAP_FAILED){
         ERR_EXIT("mmap");
     }
     char ch = 'a';
