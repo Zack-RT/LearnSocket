@@ -16,4 +16,3 @@ int shutdown(int sockfd, int how);
 
 ## 改进回射客户与服务程序
 - 在stdin中输入EOF后客户端关闭套接字，但如果服务器回射信息因为某些原因延迟，此时由于client已经关闭套接字，服务器再往socket写入消息会返回SIG_PIPE信号，客户端也无法接受到回射信息。为了解决这个问题client可以使用shutdown将套接字的写入关闭，这样服务器回射的消息还能接收到。
-- 
