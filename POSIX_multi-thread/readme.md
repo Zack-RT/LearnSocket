@@ -2,6 +2,8 @@
 
 [线程介绍](线程介绍.md)
 
+---
+
 ## 相关函数
 
 注意点：
@@ -75,6 +77,93 @@ exit | pthread_exit
 僵进程|僵线程
 kill | pthread_cancel
 
+---
+
 ## 用线程实现回射服务器
 
 [echosrv](02echosrv.c)
+
+---
+
+## 线程属性
+
+初始化与销毁属性
+```
+int pthread_attr_init(pthread_attr_t *attr);
+int pthread_attr_destroy(pthread_attr_t *attr);
+```
+
+获取与设置分离属性
+```
+int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate);
+int pthread_attr_getdetachstate(const pthread_attr_t *attr, int *detachstate);
+```
+
+获取与设置栈大小
+```
+int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize);
+int pthread_attr_getstacksize(const pthread_attr_t *attr, size_t *stacksize);
+```
+
+获取与设置栈溢出保护区大小
+```
+int pthread_attr_setguardsize(pthread_attr_t *attr, size_t guardsize);
+int pthread_attr_getguardsize(const pthread_attr_t *attr, size_t *guardsize);
+```
+
+获取与设置线程竞争范围
+```
+int pthread_attr_setscope(pthread_attr_t *attr, int scope);
+int pthread_attr_getscope(const pthread_attr_t *attr, int *scope);
+```
+
+获取与设置调度策略
+```
+int pthread_attr_setschedpolicy(pthread_attr_t *attr, int policy);
+int pthread_attr_getschedpolicy(const pthread_attr_t *attr, int *policy);
+```
+
+获取与设置继承调度策略
+```
+int pthread_attr_setinheritsched(pthread_attr_t *attr,
+                                int inheritsched);
+int pthread_attr_getinheritsched(const pthread_attr_t *attr,
+                                int *inheritsched);
+```
+
+获取与设置调度参数
+```
+int pthread_attr_setschedparam(pthread_attr_t *attr,
+                                const struct sched_param *param);
+int pthread_attr_getschedparam(const pthread_attr_t *attr,
+                                struct sched_param *param);
+```
+
+获取与设置并发级别
+```
+int pthread_setconcurrency(int new_level);
+int pthread_getconcurrency(void);
+```
+> 仅再N:M线程模型中有效，设置并发级别，给内核一个提示：表示提供给定级别数量的核心线程来映射用户线程是高效的。该方法是非标准的GNU/Linux扩展函数，需要添加宏定义才能获得：#define _GNU_SOURCE
+
+---
+
+## 线程特定数据
+![](mdimg/QQ截图20210513194726.png)
+- 在单线程程序中，我们经常要用到“全局变量”以实现多个函数间共享 数据。
+- 在多线程环境下，由于数据空间是共享的，因此全局变量也为所有线 程所共有。 
+- 但有时应用程序设计中有必要提供线程私有的全局变量，仅在某个线 程中有效，但却可以跨多个函数访问。 
+- POSIX线程库通过维护一定的数据结构来解决这个问题，这个些数据 称为（Thread-specific Data，或TSD）。
+
+### 相关函数
+```
+int pthread_key_create(pthread_key_t *key,void(*destructor)(void*));
+int pthread_key_delete(pthread_key_t key);
+
+void *pthread_getspecific(pthread_key_t key):
+int pthread_setspecific(pthread_key_t key, const void *value);
+
+int pthread_once(pthread_once_t *once_control, void
+(*init_routine)(void));
+pthread_once_t once_control = PTHREAD__ONCE__INIT;
+```
